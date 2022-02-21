@@ -84,6 +84,12 @@ def update_df(idx: int, eval_val: str, comment_val: str) -> None:
 	df.at[idx, 'comment'] = comment_val
 	session_next_set()
 
+def save_df() -> None:
+	"""Saves dataframe at current session."""
+	df.to_csv('viewer.csv', index=False)
+	with st.sidebar:
+		st.info('df saved to viewer.csv')
+
 
 def populate(index_frame: str) -> tuple:
 	"""Populates image data and stores eval input."""
@@ -106,7 +112,11 @@ def populate(index_frame: str) -> tuple:
 		comment_val = df.loc[df["index"] == index_frame, "comment"].iloc[0]
 		comment_val = col_gif.text_input('Comments: ', value = comment_val)
 		
-		st.button('SUBMIT', on_click=update_df, args=(idx, eval_val, comment_val))
+		st.button(
+			'SUBMIT',
+			on_click=update_df,
+			args=(idx, eval_val, comment_val)
+			)
 
 
 # Sets evaluation choices.
@@ -163,9 +173,22 @@ if st.button("< Previous"):
 if st.button("Next >"):
 	session_next_set()
 
-viewing_index = indices.values[st.session_state['page']]
-st.write(f'Viewing index: {viewing_index}')
+# Reports current index.
+with st.sidebar:
+	viewing_index = indices.values[st.session_state['page']]
+	st.write(f'Viewing index: {viewing_index}')
+
 populate(viewing_index)
 
-
 st.dataframe(df)
+
+# Save dataframe.
+with st.sidebar:
+	st.markdown(
+		"<br><br><br><br>",
+		unsafe_allow_html=True
+		)
+	st.button(
+		'SAVE DF',
+		on_click=save_df
+		)
