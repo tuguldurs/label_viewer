@@ -1,2 +1,6 @@
 # label_viewer
-Generic flask based viewer for labelled image data.
+Generic streamlit based viewer for labelled image data.
+
+## Usage
+
+![demo](demo/demo.gif)
